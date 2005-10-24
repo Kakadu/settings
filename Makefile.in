@@ -173,14 +173,14 @@ OFLAGS = -w p $(MODULE_INCLUDES) $(P4FLAGS)
 CLEAN_EXTRA := .depend doc wiki
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 CONFIG_CLEAN_FILES = 
-DIST_COMMON =  Makefile.am Makefile.in acinclude.m4 aclocal.m4 \
+DIST_COMMON =  COPYING Makefile.am Makefile.in acinclude.m4 aclocal.m4 \
 config.guess config.sub configure configure.in install-sh missing \
 mkinstalldirs
 
 
 DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
-TAR = gtar
+TAR = tar
 GZIP_ENV = --best
 all: all-redirect
 .SUFFIXES:
