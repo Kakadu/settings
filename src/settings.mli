@@ -18,7 +18,7 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  *  See the GNU Lesser General Public License version 2.1 for more details
- *  (enclosed in the file LGPL).
+ *  (enclosed in the file COPYING).
  **************************************************************************)
 
 (** Settings manupulation: a functions to maintain a (mutable) structure with 

@@ -2,6 +2,10 @@ dnl This file was synchronized with template ($Revision: 9 $)
 dnl
 dnl comments are started with dnl
 AC_INIT
+dnl create supplementary scripts in subdirectory
+AC_CONFIG_AUX_DIR(config)
+dnl determine system type
+AC_CANONICAL_SYSTEM
 dnl project name and version
 AM_INIT_AUTOMAKE(settings, 0.1, nodefine)
 
@@ -23,9 +27,6 @@ AC_PROG_OCAMLDSORT
 dnl add configure option "--with-sitelib"
 AC_ARG_OCAML_SITELIB
 
-dnl get the objects and executables extension
-AC_OBJEXT
-AC_EXEEXT
 AC_SUBST(CFLAGS)
 
 dnl check for parser module
@@ -33,7 +34,7 @@ dnl usage:
 dnl module name, file name to use with "#load",
 dnl first dir <space> second dir <space> etc., module homepage.
 AC_CHECK_CAMLP4_MODULE(logger, pa_log.cmo, +camlp4 ../logger, http://oops.tepkom.ru/logger)
-dnl AC_SUBST(PARSER_INCLUDES)
+AC_SUBST(PARSER_INCLUDES)
 
 dnl check for compiler module
 dnl usage:
@@ -42,7 +43,8 @@ dnl 1st dir <space> 2nd dir <space> etc., library homepage.
 AC_CHECK_OCAML_MODULE(str, Str)
 dnl more module checks
 dnl AC_CHECK_OCAML_MODULE(libname, Module1 Module2, ../libdir, http://www.example.com/libname)
-dnl AC_SUBST(MODULE_INCLUDES)
+AC_SUBST(MODULE_INCLUDES)
+AC_SUBST(EXTRA_CMA)
 
 dnl add configure option "--enable-log"
 AC_ARG_ENABLE(log,[  --enable-log            turn on log messages], LOG="-LOG")
@@ -51,8 +53,12 @@ AC_ARG_ENABLE(debug,[  --enable-debug          turn on debugging], DEBUG="-g")
 AC_SUBST(LOG)
 AC_SUBST(DEBUG)
 
+AC_SUBST(ac_aux_dir)
 dnl produce output files
 AC_CONFIG_FILES([
 Makefile
+doc/Makefile
+src/Makefile
+regression/Makefile
 ])
 AC_OUTPUT

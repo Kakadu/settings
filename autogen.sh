@@ -1,5 +1,6 @@
 #!/bin/sh
 
-aclocal
+set -x
+aclocal -I config
 autoconf --force
 automake --add-missing --copy --foreign
