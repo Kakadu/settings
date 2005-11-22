@@ -953,7 +953,7 @@ else
 fi
 AC_SUBST($1)])
 
-dnl This file was synchronized with template ($Revision: 9 $)
+dnl This file was synchronized with template ($Revision: 15 $)
 dnl
 dnl -*- autoconf -*- macros for OCaml
 dnl by Grigory Batalov <bga@altlinux.org>, 2005
@@ -1111,17 +1111,21 @@ if test "$have_ocamlopt" ; then
     if test "$have_ocamlcc" = "no"; then
 	AC_MSG_WARN(Cannot find OCaml C compiler ($OCAMLCC); bytecode compilation only)
 	unset OCAMLOPT
-    else
-	CC=$OCAMLC
-	touch conftest.ml
-	ac_ext=ml
-	_AC_COMPILER_EXEEXT_DEFAULT
-	_AC_COMPILER_EXEEXT_WORKS
-	_AC_COMPILER_EXEEXT_O
-	rm -f a.out
-	AC_SUBST([EXEEXT], [$ac_cv_exeext])dnl
     fi
+    rm -f conftest.c
 fi
+
+dnl Determine executable extension
+CC=$OCAMLC
+touch conftest.ml
+ac_ext=ml
+ac_link="$CC conftest.ml && ( rm -f conftest.cm?; test -f camlprog.exe && mv camlprog.exe a.exe || true )"
+_AC_COMPILER_EXEEXT_DEFAULT
+_AC_COMPILER_EXEEXT_WORKS
+_AC_COMPILER_EXEEXT_O
+rm -f a.out a.exe
+AC_SUBST([EXEEXT], [$ac_cv_exeext])dnl
+
 m4_pattern_allow([^AM_BFLAGS$])
 m4_pattern_allow([^AM_OFLAGS$])
 BFLAGS='$(AM_BFLAGS)'
@@ -1261,12 +1265,19 @@ dnl
 dnl macro AC_PROG_OCAMLDSORT will check OCamlDSort
 dnl   OCAMLDSORT    "ocamldsort"
 AC_DEFUN([AC_PROG_OCAMLDSORT], [
-AC_CHECK_PROG(have_ocamldsort, ocamldsort, yes, no)
-if test "$have_ocamldsort" = no; then
-    AC_MSG_WARN(Cannot find ocamldsort[,] using echo)
-    OCAMLDSORT=echo
+AC_ARG_WITH(ocamldsort,[  --with-ocamldsort       sort sources before build],
+  use_ocamldsort="$withval")
+dnl Checking for ocamldsort
+if test "$use_ocamldsort" = yes; then
+	AC_CHECK_PROG(have_ocamldsort, ocamldsort, yes, no)
+	if test "$have_ocamldsort" = no; then
+	    AC_MSG_WARN(Cannot find ocamldsort[,] using echo)
+	    OCAMLDSORT=echo
+	else
+	    OCAMLDSORT=ocamldsort
+	fi
 else
-    OCAMLDSORT=ocamldsort
+	OCAMLDSORT=echo
 fi
 AC_SUBST(OCAMLDSORT)
 ])
@@ -1288,7 +1299,7 @@ dnl   2 -> capitalized names to use with open
 dnl   3 -> extra searching dirs
 dnl   MODULE_INCLUDES	include options, i.e. "-I /path/to/dir"
 dnl   EXTRA_CMA		extra libraries to link with
-dnl 4 -> URL for module homepage
+dnl   4 -> URL for module homepage
 AC_DEFUN([AC_CHECK_OCAML_MODULE], [
 for module in $2; do
     AC_MSG_CHECKING(for $1 ($module))
@@ -1351,6 +1362,9 @@ dnl Try to link with library
 		fi
     else
 		AC_MSG_RESULT(not found)
+		if ! test -z "$4"; then
+		    AC_MSG_WARN(Please[,] visit $4)
+		fi
 		AC_MSG_ERROR(Required module $module not found in library $1)
     fi
 done
@@ -1365,7 +1379,7 @@ dnl   1 -> module to check
 dnl   2 -> file name to use with load
 dnl   3 -> extra searching dirs
 dnl   PARSER_INCLUDES		include options, i.e. "-I /path/to/dir"
-dnl 4 -> URL for module homepage
+dnl   4 -> URL for module homepage
 AC_DEFUN([AC_CHECK_CAMLP4_MODULE], [
 AC_MSG_CHECKING(for $1 ($2))
 cat > conftest.ml <<EOF
@@ -1388,7 +1402,6 @@ dnl Query package via ocamlfind
     fi
     if ! test "$found"; then
 dnl Search through specified dirs
-dnl TODO: append src subdir to third parameter
 	if test "$SITELIBDIR" != ""; then
 	    dirs="$3 $SITELIBDIR/$1"
 	else
@@ -1403,13 +1416,6 @@ dnl TODO: append src subdir to third parameter
 	    if $CAMLP4R -I $check_dir conftest.ml > /dev/null 2>&1 ; then
 		found=yes
 		break
-	    else
-dnl TODO: remove this
-		check_dir=$check_dir/src
-		if $CAMLP4R -I $check_dir conftest.ml > /dev/null 2>&1 ; then
-		    found=yes
-		    break
-		fi
 	    fi
 	done
 	if test "$found" ; then

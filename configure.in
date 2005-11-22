@@ -33,7 +33,7 @@ dnl check for parser module
 dnl usage:
 dnl module name, file name to use with "#load",
 dnl first dir <space> second dir <space> etc., module homepage.
-AC_CHECK_CAMLP4_MODULE(logger, pa_log.cmo, +camlp4 ../logger, http://oops.tepkom.ru/logger)
+AC_CHECK_CAMLP4_MODULE(logger, pa_log.cmo, +camlp4 ../logger/src, http://oops.tepkom.ru/projects/logger)
 AC_SUBST(PARSER_INCLUDES)
 
 dnl check for compiler module
