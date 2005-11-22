@@ -16,7 +16,7 @@ AM_OFLAGS = -w p $(MODULE_INCLUDES) $(DEBUG)
 
 clean-am:
 	rm -f $(addsuffix .cmi, $(TESTS)) $(addsuffix .cmo, $(TESTS))
-	rm -f $(TESTS)
+	rm -f $(addsuffix $(EXEEXT), $(TESTS))
 	rm -f *.diff *.log
 
 test: test.ml
