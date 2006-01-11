@@ -1,0 +1,15 @@
+Settings:
+  o=a.out
+$$memo=-o   	 - optional option
+-m 	 - mandatory option
+-a    	 - accumulator
+Free parameters:
+Warnings:
+Option -o: a.out
+Option -m: not set
+Option -a: not set
+Help:
+-o     - optional option 
+-m     - mandatory option
+-a     - accumulator     
+

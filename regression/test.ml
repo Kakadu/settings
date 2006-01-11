@@ -7,7 +7,7 @@ let main () =
      [
        "o", String, Optional , "   \t - optional option";
        "m", String, Mandatory, " \t - mandatory option";
-       "a", Accu  , Mandatory, "    \t - accumulator"
+       "a", Accu ";" , Mandatory, "    \t - accumulator"
      ]
     (fun () -> ["o", Str "a.out"])
   in
@@ -28,8 +28,3 @@ let main () =
 ;;
 
 main ()
-      
-
-
-
-

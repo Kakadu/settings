@@ -5,6 +5,8 @@ TESTS_ENVIRONMENT = ./test.sh
 #PARSER_INCLUDES += -I $(top_srcdir)/src
 MODULE_INCLUDES += -I $(top_srcdir)/src
 
+EXTRA_CMA += $(PACKAGE).cma
+
 # OCaml parser call with flags
 AM_P4FLAGS := -pp "$(CAMLP4O) $(PARSER_INCLUDES) pa_log.cmo $(LOG)"
 #AM_P4FLAGS = -pp "$(CAMLP4R) $(PARSER_INCLUDES)"
@@ -20,4 +22,4 @@ clean-am:
 	rm -f *.diff *.log
 
 test: test.ml
-	$(OCAMLC) $(BFLAGS) $(P4FLAGS) -o $@$(EXEEXT) $< 
+	$(OCAMLC) $(BFLAGS) $(EXTRA_CMA) $(P4FLAGS) -o $@$(EXEEXT) $< 
