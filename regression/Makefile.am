@@ -1,6 +1,6 @@
 TESTS = test
 
-TESTS_ENVIRONMENT = ./test.sh
+TESTS_ENVIRONMENT = $(srcdir)/test.sh
 
 #PARSER_INCLUDES += -I $(top_srcdir)/src
 MODULE_INCLUDES += -I $(top_srcdir)/src
@@ -21,5 +21,7 @@ clean-am:
 	rm -f $(addsuffix $(EXEEXT), $(TESTS))
 	rm -f *.diff *.log
 
+# Rules to build tests
 test: test.ml
 	$(OCAMLC) $(BFLAGS) $(EXTRA_CMA) $(P4FLAGS) -o $@$(EXEEXT) $< 
+
