@@ -1,5 +1,5 @@
 (**************************************************************************
- *  Copyright (C) 2005
+ *  Copyright (C) 2005-2008
  *  Dmitri Boulytchev (db@tepkom.ru), St.Petersburg State University
  *  Universitetskii pr., 28, St.Petersburg, 198504, RUSSIA    
  *
@@ -21,7 +21,7 @@
  *  (enclosed in the file COPYING).
  **************************************************************************)
 
-module StringMap = Map.Make (struct type t = string let compare = compare end)
+module StringMap = Map.Make (Compare.String)
 
 type 'a holder = 'a StringMap.t ref
 type 'a t =
@@ -67,13 +67,24 @@ let create ts =
        | x -> raise x
      );
    toString = (fun () ->
-     StringMap.fold 
-       (fun key valu str -> 
-	 (if str = "" then "" else str ^ "\n") ^ (Printf.sprintf "%s=%s" key (ts valu))
-       ) 
-       !holder 
-       ""
-     )
+     let module M = View.Map 
+	 (StringMap) 
+	 (View.String) 
+	 (
+	  struct
+
+	    type t = tag
+
+	    let toString = function
+	      | Int n -> View.Integer.toString n
+	      | Str s -> s
+	      | Flag  -> "yes"
+
+	  end
+	 )
+     in
+     M.toString !holder
+   )
   }  
 
 type init = string list -> tag result

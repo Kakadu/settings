@@ -1,8 +1,7 @@
 Settings:
-  o=a.out
-$$memo=-o   	 - optional option
+  ($$memo, -o   	 - optional option
 -m 	 - mandatory option
--a    	 - accumulator
+-a    	 - accumulator), (o, a.out)
 Free parameters:
 Warnings:
 Option -o: a.out

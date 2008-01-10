@@ -16,7 +16,10 @@ let main () =
     | Ok (conf, rest) -> conf, rest, []
     | Warnings (conf, rest, warnings) -> conf, rest, warnings
   in
-  let concat l = List.fold_left (fun c w -> c ^ "\n  " ^ w) "" warnings in
+  let concat = 
+    let module L = View.ListC (struct let concat = View.concatWithDelimiter "\n" end) (View.String) in
+    L.toString
+  in
   Printf.printf "Settings:\n  %s\nFree parameters:%s\nWarnings:%s\n"
     (conf.toString ())
     (concat rest)
