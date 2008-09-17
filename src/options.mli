@@ -47,8 +47,8 @@ type 'a result =
                                           missing parameters *)
 
 
-(** List of option names (without leading '-') and callback functions *)
-type 'a pattern = (string * 'a callback) list
+(** List of option short names (without leading '-'), long names (without leading '--') and callback functions *)
+type 'a pattern = (string * string * 'a callback) list
 
 (** Function to read from configuration file to list of options. Parameter   
     is configuration file name. Configuration file consists of list of       
@@ -59,7 +59,7 @@ val read  : string -> string list
 
 (** Options parser. Takes command line, pattern and initial value        
     and returns result value  *)
-val parse : string list -> (string * 'a callback) list * 'a -> 'a result
+val parse : string list -> 'a pattern * 'a -> 'a result
 
 
 

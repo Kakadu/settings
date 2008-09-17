@@ -104,8 +104,8 @@ let customize conf options init =
     List.iter (fun (key, valu) -> conf.set key valu) (init ()); 
     let memo = 
       List.fold_left
-	(fun s (key, _, _, m) -> 
-	  (if s = "" then "" else s ^ "\n") ^ "-" ^ key ^ m
+	(fun s (key, longkey, _, _, m) -> 
+	  (if s = "" then "" else s ^ "\n") ^ "-" ^ key ^ ",\t --" ^ longkey ^ m
 	) 
 	"" 
 	options 
@@ -116,8 +116,8 @@ let customize conf options init =
     end;
     let filter = 
       List.map 
-	(fun (key, tag, opt, _) -> 
-	  (key, 
+	(fun (key, longkey, tag, opt, _) -> 
+	  (key, longkey,
 	   match tag with
 	   | Accu delim ->
 	       if opt = Optional
@@ -127,14 +127,19 @@ let customize conf options init =
 		     match conf.get key with
 		     | Some (Str x) ->
 			 if x = "" && s <> ""
-			 then conf.set key (Str (delim ^ s))
-	                 else conf.set key (Str (x ^ delim ^ s));
+			 then (conf.set key (Str (delim ^ s)); conf.set longkey (Str (delim ^ s)))
+	                 else (conf.set key (Str (x ^ delim ^ s)); conf.set longkey (Str (delim ^ s)));
 			 conf
 
 		     | None -> 
-			 conf.set key (Str s); conf
+			 conf.set key (Str s); conf.set longkey (Str s); conf
 		   )
-	       else Options.Parameter (fun s conf -> conf.set key (match conf.get key with  None -> Str (delim ^ s) | Some (Str x) -> Str (x ^ delim ^ s)); conf)
+	       else Options.Parameter (fun s conf -> 
+	       	let value = (match conf.get key with  None -> Str (delim ^ s) | Some (Str x) -> Str (x ^ delim ^ s)) in 
+		conf.set key value;
+		conf.set longkey value;
+		conf
+	       )
 	       
            | Number -> 
 	       if opt = Optional
@@ -144,14 +149,25 @@ let customize conf options init =
 		     match conf.get key with
 		     | Some (Int x) ->
 			 if x = -1 && s <> ""
-			 then conf.set key (Int (int_of_string s)); 
+			 then (
+			 	let value = (Int (int_of_string s)) in 
+				conf.set key value;
+				conf.set longkey value
+			 );
 			 conf
 
 		     | None -> 
-			 conf.set key (Int (if s = "" then -1 else (int_of_string s))); 
+			 let value =  (Int (if s = "" then -1 else (int_of_string s))) in 
+			 conf.set key value;
+			 conf.set longkey value;
 			 conf
 		   )
-	       else Options.Parameter (fun s conf -> conf.set key (Int (int_of_string s)); conf)
+	       else Options.Parameter (fun s conf -> 
+	       		let value = (Int (int_of_string s)) in 
+			conf.set key value;
+			conf.set longkey value;
+			conf
+		)
 		 
 	   | String -> 	       
 	       if opt = Optional
@@ -159,15 +175,21 @@ let customize conf options init =
 		   (fun s conf -> 
 		     match conf.get key with
 		     | Some (Str x) -> 
-			 if x = "" && s <> "" then  conf.set key (Str s); 
+			 if x = "" && s <> "" then  (
+			   conf.set key (Str s); 
+			   conf.set longkey (Str s)
+			 );
 			 conf
 			   
-                     | None -> conf.set key (Str s); conf
+                     | None -> 
+		     	conf.set key (Str s); 
+			conf.set longkey (Str s);
+			conf
 		   )
 		   
-	       else Options.Parameter (fun s conf -> conf.set key (Str s); conf) 
+	       else Options.Parameter (fun s conf -> conf.set longkey (Str s); conf.set key (Str s); conf) 
 		 
-	   | Switch -> Options.Bool (fun conf -> conf.set key Flag; conf)
+	   | Switch -> Options.Bool (fun conf -> conf.set key Flag; conf.set longkey Flag; conf)
 	  )
 	) 
 	options 

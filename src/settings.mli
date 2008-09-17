@@ -90,7 +90,7 @@ val empty : unit -> init (*string list -> tag result*)
     in ["a;b"] (like [-I] option for [cc]).
 *)
 val customize : 
-    init  -> (string * kind * opt * string) list -> (unit -> (string * tag) list) -> init
+    init  -> (string * string * kind * opt * string) list -> (unit -> (string * tag) list) -> init
 
 
 

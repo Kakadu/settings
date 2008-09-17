@@ -23,7 +23,7 @@
 
 type 'a callback = Bool of ('a -> 'a) | Parameter of (string -> 'a -> 'a) | Optional of (string -> 'a -> 'a)
 type 'a result   = Success of 'a * string list | Incomplete of 'a * string list * string list    
-type 'a pattern  = (string * 'a callback) list
+type 'a pattern  = (string * string * 'a callback) list
 
 let read fname =  
   let ch = open_in fname in
@@ -53,7 +53,8 @@ let read fname =
 
 let parse args (patterns, conf) =
   let find patterns option =
-    snd (List.find (fun (s, c) -> s = option) patterns)
+    let key, longkey, c =  (List.find (fun (key, longkey, c) -> "-" ^ key = option || "--" ^ longkey = option) patterns) in 
+    if option = "-" ^ key then key, c else longkey, c
   in
   let callback, conf, frees, incompl, last =
     List.fold_left
@@ -66,7 +67,7 @@ let parse args (patterns, conf) =
 	    | Some (Optional f) -> (f "" conf), incompl
 	    | _    -> conf, (if last = "" then incompl else last :: incompl)
 	    in
-	    let cb = find patterns (String.sub arg 1 (String.length arg - 1)) in 
+	    let arg, cb = find patterns arg in 
 	    match cb with
 	    | Bool f -> None, f conf, frees, incompl, ""
 	    | Parameter _ -> (Some cb), conf, frees, incompl, arg
