@@ -1,14 +1,14 @@
 Settings:
-  ($$memo, -o   	 - optional option
--m 	 - mandatory option
--a    	 - accumulator), (o, a.out)
+  ($$memo, -o,	 --optional-key   	 - optional option
+-m,	 --mandatory-key 	 - mandatory option
+-a,	 --accumulator    	 - accumulator), (o, a.out)
 Free parameters:
 Warnings:
 Option -o: a.out
 Option -m: not set
 Option -a: not set
 Help:
--o     - optional option 
--m     - mandatory option
--a     - accumulator     
+-o, --optional-key    - optional option 
+-m, --mandatory-key   - mandatory option
+-a, --accumulator     - accumulator     
 

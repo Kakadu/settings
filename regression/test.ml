@@ -5,9 +5,9 @@ let main () =
   let oParser = customize 
     (empty ())
      [
-       "o", String, Optional , "   \t - optional option";
-       "m", String, Mandatory, " \t - mandatory option";
-       "a", Accu ";" , Mandatory, "    \t - accumulator"
+       "o", "optional-key", String, Optional , "   \t - optional option";
+       "m", "mandatory-key", String, Mandatory, " \t - mandatory option";
+       "a", "accumulator", Accu ";" , Mandatory, "    \t - accumulator"
      ]
     (fun () -> ["o", Str "a.out"])
   in
