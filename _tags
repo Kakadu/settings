@@ -1,0 +1,4 @@
+true: package(logger), package(typeutil)
+<src/*>: debug
+<regression/test.byte>: package(str)
+"src": include
