@@ -2,3 +2,5 @@ true: package(logger), package(typeutil)
 <src/*>: debug
 <regression/test.byte>: package(str)
 "src": include
+#<src/options.ml>: for-pack(Settings)
+#<src/settings.ml>: for-pack(Settings)
