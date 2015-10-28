@@ -1,0 +1,5 @@
+version = "0.1"
+description = "Library for managing settings"
+requires = "logger typeutil"
+archive(byte)   = "settings.cma"
+archive(native) = "settings.cmxa"
