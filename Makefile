@@ -1,4 +1,6 @@
 TARGETS=src/settings.cma src/settings.cmxa
+DIST_FILES=$(TARGETS) src/settings.a
+
 .PHONY: clean all test install uninstall
 
 all: $(TARGETS) regression/test.byte
@@ -19,7 +21,7 @@ clean:
 	$(RM) -r _build
 
 install:
-	ocamlfind install settings META $(addprefix _build/,$(TARGETS))
+	ocamlfind install settings META $(addprefix _build/,$(DIST_FILES))
 
 uninstall:
 	ocamlfind remove settings
